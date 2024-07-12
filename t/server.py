@@ -20,7 +20,7 @@ prompt_template = ChatPromptTemplate.from_messages([
     ("user","{text}")
 ])
 
-# 2 获取你的智谱 API Key
+# 2 获取你的百川 API Key
 _ = load_dotenv(find_dotenv())
 
 # 3. Create model
@@ -50,11 +50,11 @@ add_routes(
     path="/chain",
 )
 
-add_routes(
+""" add_routes(
     app,
     test.chain,
     path="/chain/test",
-)
+) """
 
 # 8. Publishing static resources
 app.mount("/pages_",StaticFiles(directory="static_"),name="pages_")

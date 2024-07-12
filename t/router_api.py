@@ -2,11 +2,13 @@ from fastapi import APIRouter
 from starlette.responses import StreamingResponse
 from pydantic import BaseModel
 import chat as chat_chain
+import test as test_chain
 
 from langchain_core.messages import AIMessageChunk
 
 class Item(BaseModel):
-    content: str
+    question: str
+    config: str
 
 router = APIRouter()
 
@@ -14,23 +16,25 @@ router = APIRouter()
 async def chathello():
     return {"message": "Hello, World!"}
 
-async def generate_response(content):
+async def generate_response(question):
     # chat_chain.config["configurable"]["session_id"] = time.time()
-    print(chat_chain.config)
-    async for message_chunk in chat_chain.with_message_history.astream(
-        {"content":content},
-        config=chat_chain.config
+    print(test_chain.config)
+    async for message_chunk in test_chain.chain.astream(
+        {"question":question},
+        config=test_chain.config
     ):
         # 确保将AIMessageChunk对象转换为字符串
         if isinstance(message_chunk, AIMessageChunk):
             message_str = str(message_chunk.content)
+        elif isinstance(message_chunk, str):
+            message_str = message_chunk
         else:
-            message_str = message_chunk.content
+            message_str = str(message_chunk)
         
         # 将字符串编码为字节流
         yield message_str.encode('utf-8')
     
-@router.post("/api/chat")
-async def chat(item:Item):
-    print("传输的参数为：",item.content)
-    return StreamingResponse(generate_response(item.content),media_type="text/event-stream")
+@router.post("/api/test")
+async def test(item:Item):
+    print("传输的参数为：",item.question)
+    return StreamingResponse(generate_response(item.question ),media_type="text/event-stream")
