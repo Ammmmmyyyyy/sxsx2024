@@ -8,7 +8,7 @@ from langchain_community.chat_models import ChatZhipuAI
 from langserve import add_routes
 from dotenv import load_dotenv,find_dotenv
 from router_api import router
-import test
+import constellation
 from langchain_openai import ChatOpenAI
 import os
 
@@ -52,8 +52,8 @@ add_routes(
 
 """ add_routes(
     app,
-    test.chain,
-    path="/chain/test",
+    constellation.chain,
+    path="/chain/constellation",
 ) """
 
 # 8. Publishing static resources

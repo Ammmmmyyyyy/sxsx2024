@@ -1,8 +1,8 @@
 from fastapi import APIRouter
 from starlette.responses import StreamingResponse
 from pydantic import BaseModel
-import chat as chat_chain
 import test as test_chain
+import constellation as con_chain
 
 from langchain_core.messages import AIMessageChunk
 
@@ -16,10 +16,10 @@ router = APIRouter()
 async def chathello():
     return {"message": "Hello, World!"}
 
-async def generate_response(question):
+async def generate_response(p_chain , question):
     # chat_chain.config["configurable"]["session_id"] = time.time()
     print(test_chain.config)
-    async for message_chunk in test_chain.chain.astream(
+    async for message_chunk in p_chain.chain.astream(
         {"question":question},
         config=test_chain.config
     ):
@@ -33,8 +33,13 @@ async def generate_response(question):
         
         # 将字符串编码为字节流
         yield message_str.encode('utf-8')
-    
+        
 @router.post("/api/test")
 async def test(item:Item):
     print("传输的参数为：",item.question)
-    return StreamingResponse(generate_response(item.question ),media_type="text/event-stream")
+    return StreamingResponse(generate_response(test_chain,item.question ),media_type="text/event-stream")
+
+@router.post("/api/constellation")
+async def constellation(item:Item):
+    print("传输的参数为：",item.question)
+    return StreamingResponse(generate_response(con_chain,item.question ),media_type="text/event-stream")

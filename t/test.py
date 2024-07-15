@@ -30,7 +30,7 @@ from langchain.memory import ConversationBufferMemory
 from langchain.chains import ConversationChain
 from langchain_core.messages import HumanMessage
 from langchain_core.runnables.history import RunnableWithMessageHistory
-from langchain_community.chat_message_histories import SQLChatMessageHistory,ChatMessageHistory
+from langchain_community.chat_message_histories import ChatMessageHistory
 from langchain_core.chat_history import BaseChatMessageHistory
 
 store = {}
@@ -57,7 +57,7 @@ answer_prompt = ChatPromptTemplate.from_messages(
         你要对查询结果的语法进行检查，使回答内容流畅易懂。
         “梦见舅舅在当司机”是什么意思？
         梦见舅舅代表你会受到人们的尊重，并且有赚钱的天赋，可能是在远方。如果你梦见自己是司机，在高速公路上开车，这可能意味着你近期的生活很愉快，精力充沛。同时，司机的出现也可能象征着对意外事件发生的担忧。 '''),
-        # MessagesPlaceholder(variable_name="history"),
+        MessagesPlaceholder(variable_name="history"),
         ("user",''' "Question: {question}
         SQL Query: {query}
         SQL Result: {result}"''')
@@ -105,4 +105,6 @@ config = {
 # end = time.time()
 # print("db duration=======>",(end-start)/1000)
 
-#print(chain.invoke({"question": "梦见舅舅是司机是什么意思？"},config={"configurable":{"session_id":"s3"}}))
+#print(chain.invoke({"question": "梦见舅舅是司机是什么意思？"}, config=config))
+
+# 访问会话历史记录
