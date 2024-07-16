@@ -1,0 +1,141 @@
+body, html {  
+    height: 100%;  
+    margin: 0;  
+    padding: 0;  
+    overflow-x: hidden; /* 防止水平滚动条出现 */  
+}  
+body {
+    background-color:black;
+}
+  
+.background-image-container img {  
+    position: fixed;  
+    top: 50%;  
+    left: 50%;  
+    transform: translate(-50%, -50%);  
+    max-width: 100%;  
+    max-height: 100%;  
+    height: auto;  
+    width: auto;  
+}  
+  
+.white-title-big {  
+    position: relative;  
+    top: 20%;
+    left:20%;
+    height: 60px; /* 设置容器的高度，根据需要调整 */  
+    width: 100px; /* 设置容器的宽度，根据需要调整 */ 
+    color: white;  
+    text-align: center; /* 文本居中 */
+    font-size: 42px;  
+    font-family: Georgia, 'Times New Roman', Times, serif;
+}
+
+.white-title-small {  
+    position: relative;  
+    top: 20%;
+    left:20%;
+    height: 50px; 
+    width: 100px; 
+    color: white;  
+    text-align: center; /* 文本居中 */
+    font-size: 24px;  
+    font-family: Georgia, 'Times New Roman', Times, serif;
+}
+
+.text {  
+    position: relative; 
+    top: 20%;
+    left:20%;
+    width: 60%; 
+    color: white;  
+    font-size: 18px; 
+    font-family: Georgia, 'Times New Roman', Times, serif;  
+    line-height: 1.5;
+}
+
+.text-big {  
+    position: relative; 
+    color: white;  
+    font-size: 24px; 
+    font-family: Georgia, 'Times New Roman', Times, serif;  
+    line-height: 1.5;
+}
+
+.text-inbox {  
+    position: relative; 
+    color: white;  
+    font-size: 18px; 
+    font-family: Georgia, 'Times New Roman', Times, serif;  
+    line-height: 1.5;
+}
+
+.pic {  
+    position: relative; 
+    top: 20%;
+    left:15%;
+    width: 40%; 
+    color: white;  
+}
+
+.box {  
+    position: relative; 
+    padding: 3% 5%; /* 内边距 */  
+    margin: 5%; /* 外边距 */  
+    top: 15%;
+    left:15%;
+    width: 52%; 
+    background-color:rgba(32, 32, 41); /* 背景色 */  
+    border-radius: 8px; /* 边框圆角 */ 
+    opacity: 0.8;
+    color: white;  
+    font-size: 18px; 
+    font-family: Georgia, 'Times New Roman', Times, serif;  
+    line-height: 1.5;
+}
+.corner-image {
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 400px; /* 设置图片的最大宽度 */
+            height: auto; /* 高度自动调整以保持纵横比 */
+            transform: translate(50%, -50%); /* 使图片的中心点在右上角 */
+        }
+.label {  
+    display: inline-block;  
+    position: relative; 
+
+    padding: 4px 8px;  
+    font-size: 16px;  
+    font-weight: bold;  
+    color: #fff;  
+    background-color: rgba(87, 78, 113, 1);  
+    border-radius: 4px;  
+    text-align: center;  
+    white-space: nowrap;  
+    vertical-align: baseline;  
+    margin-left: 8px;  
+    margin-top: 4px;
+    margin-bottom: 4px;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
