@@ -22,21 +22,6 @@ llm = ChatOpenAI(
     model="Baichuan4",
 )
 
-""" # 星座和对应超链接的映射
-constellation_links = {
-    "双鱼座": "https://example.com/pisces",
-    "巨蟹座": "https://example.com/cancer",
-    "白羊座": "https://example.com/aries",
-    "金牛座": "https://example.com/taurus",
-    "双子座": "https://example.com/gemini",
-    "狮子座": "https://example.com/leo",
-    "处女座": "https://example.com/virgo",
-    "天秤座": "https://example.com/libra",
-    "天蝎座": "https://example.com/scorpio",
-    "射手座": "https://example.com/sagittarius",
-    "摩羯座": "https://example.com/capricorn",
-    "水瓶座": "https://example.com/aquarius"
-} """
 prompt_template = ChatPromptTemplate.from_messages(
     [
         ("system",'''你应该根据询问的星座给出一个简单的介绍。'''),

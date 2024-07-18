@@ -14,7 +14,7 @@ from langchain_openai import ChatOpenAI
 
 llm = ChatOpenAI(
     base_url="http://api.baichuan-ai.com/v1",
-    api_key=os.environ["BAICHUAN_API_KEY"],
+    api_key="sk-53d9624cb214d10a50cb7a610a548c56",
     model="Baichuan4",
 )
 from operator import itemgetter

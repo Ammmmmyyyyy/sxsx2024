@@ -15,6 +15,7 @@ class Item(BaseModel):
 class Item_input(BaseModel):
     input: str
     config: str
+    
 
 router = APIRouter()
 
@@ -73,7 +74,7 @@ async def generate_response_input(p_chain , question):
     
     # 将完整的响应编码为字节流
     yield complete_response.encode('utf-8')
-        
+    
 @router.post("/api/test")
 async def test(item:Item):
     print("传输的参数为：",item.question)
@@ -87,7 +88,8 @@ async def constellation(item:Item):
 @router.post("/api/constellation2")
 async def constellation(item:Item):
     print("传输的参数为：",item.question)
-    return StreamingResponse(generate_response(con2_chain,item.question ),media_type="text/event-stream")
+    output=con2_chain.process_input(item.question)
+    return StreamingResponse(generate_response(con2_chain,output),media_type="text/event-stream")
 
 @router.post("/api/tarot")
 async def constellation(item:Item_input):

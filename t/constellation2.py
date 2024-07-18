@@ -8,14 +8,16 @@ from langchain_core.runnables.history import RunnableWithMessageHistory
 from langchain_core.chat_history import BaseChatMessageHistory
 from langchain_community.chat_message_histories import ChatMessageHistory
 import time
-
-def get_ali_api(star, needMonth=0, needWeek=0, needTomorrow=0, needYear=0):
+from langchain_core.pydantic_v1 import BaseModel,Field
+from fuzzywuzzy import fuzz
+import re
+def get_ali_api(str):
     host = 'https://ali-star-lucky.showapi.com'
     path = '/star'
     appcode = '6685c9f6da73471dba8f2e0e6dc0f27c'
     
     # 动态构建查询字符串
-    querys = f'needMonth={needMonth}&star={star}&needWeek={needWeek}&needTomorrow={needTomorrow}&needYear={needYear}'
+    querys = str
     url = f'{host}{path}?{querys}'
 
     headers = {
@@ -23,7 +25,6 @@ def get_ali_api(star, needMonth=0, needWeek=0, needTomorrow=0, needYear=0):
     }
 
     response = httpx.get(url, headers=headers, verify=False)
-    print("Status code:", response.status_code)
 
     if response.status_code == 200:
         json_content = response.json()
@@ -35,30 +36,93 @@ def get_ali_api(star, needMonth=0, needWeek=0, needTomorrow=0, needYear=0):
 #print(get_ali_api())
 from dotenv import load_dotenv,find_dotenv
 _ = load_dotenv(find_dotenv())
-
+#client  = ZhipuAI()
 store = {}
 def get_session_history(session_id:str) -> BaseChatMessageHistory:
     if session_id not in store:
         store[session_id] = ChatMessageHistory()
     return store[session_id]
 
+
+
+tagging_prompt = ChatPromptTemplate.from_messages(
+    [("system",'''请提供一段具体的文本内容以便我从中抽取信息。
+仅提取“Classification”函数中提到的属性。
+'''),
+    ("user",'''{input}''')
+    ]
+)
+from typing import Optional
+class Classification(BaseModel):
+    constellation: str = Field(..., enum=["baiyang", "jinniu", "shuangzi" ,"juxie", "shizi", "chunv" ,"tiancheng", "tianxie", "sheshou" ,"mojie", "shuiping", "shuangyu" ,])
+    needMonth:  Optional[int] = Field(
+  
+        description="是否需要对本月进行预测",
+        enum=[0,1],
+        default=0
+    )
+    needWeek: Optional[int] = Field(
+      
+        description="是否需要对本周进行预测",
+        enum=[0,1],
+        default=0
+    )
+    needYear: Optional[int] = Field(
+      
+        description="是否需要对本年进行预测",
+        enum=[0,1],
+        default=0
+    )
+    needTomorrow: Optional[int] = Field(
+      
+        description="是否需要对明天进行预测",
+        enum=[0,1],
+        default=0
+    )
+
+    
 llm = ChatOpenAI(
+    base_url="https://open.bigmodel.cn/api/paas/v4",
+    api_key=os.environ["ZHIPUAI_API_KEY"],
+    model="glm-4",
+).with_structured_output(Classification)
+    
+tagging_chain = tagging_prompt | llm
+def process_input(question):
+    if question == "开始运势测试" or question == "你好":
+        return "我是一个星座运势测试助手。请告诉我你的星座以及你想分析明天、本周、本月、本年中哪些时间段的运势。"
+    else:
+        # 构造查询字符串
+        output=tagging_chain.invoke({"input": question}).dict()
+        formatted_string = f"needMonth={output['needMonth']}&star={output['constellation']}&needWeek={output['needWeek']}&needTomorrow={output['needTomorrow']}&needYear={output['needYear']}"
+        return get_ali_api(formatted_string)
+#print(tagging_chain.invoke({"input": "我是金牛座，我要对今年的运势进行预测。"}).dict())
+
+llm2 = ChatOpenAI(
     base_url="http://api.baichuan-ai.com/v1",
     api_key=os.environ["BAICHUAN_API_KEY"],
     model="Baichuan4",
 )
 
 prompt_template = ChatPromptTemplate.from_messages(
-    [
-        ("system",'''如果我输入“开始运势测试”，你应该输出下面这段话：“请使用拼音给我你的星座，并且告诉我你要预测本年、本月、本周、明天中的哪些运势。”
-         接下来，你要根据我给出的星座（star），以及是否需要预测本年（needYear）、本月（needMonth）、本周（needWeek）、明天（needTomorrow）
-         来调用get_ali_api(star, needMonth=0, needWeek=0, needTomorrow=0, needYear=0)这个函数来获得答案，并把这个答案整合成一段通顺且完整的话。'''),
-        MessagesPlaceholder(variable_name="history"),
-        ("user", '''{question}''')
+    [("system",'''你是一个运势测试助手,
+你的回答应该以“根据星座运势”作为开头。并且你的回答应该包含输入的所有内容。你回答的内容要尽可能的多，并且要根据预测的时间（比如明天、本周、本月、本年）分段作答。
+若你获得的输入不包含上述某一个或几个时间，则不答。
+你的回答不要包括“get_ali_api(str)”这样的文字。
+答案请按
+“
+<<<明天>>>
+<<<本周>>>
+<<<本月>>>
+<<<本年>>>
+”的格式输出
+并且你的回答应该以“感谢您的查询，以上是我对您的运势分析”作为结尾。'''),
+    MessagesPlaceholder(variable_name="history"),
+    ("user",'''{question}''')
     ]
 )
-chat_chain = prompt_template | llm
 
+chat_chain = prompt_template | llm2
 chain = RunnableWithMessageHistory(
     chat_chain,
     get_session_history,
@@ -71,5 +135,9 @@ config = {
         "session_id":time.time(),
     }
 }
-""" response = chat_chain.invoke({"question":"baiyang"})
-print(response) """
+def answer_with_ali(question):
+    ali_api_result = process_input(question)
+        # 再将结果传递给模型
+    response = chain.invoke({"question":ali_api_result},config=config)
+    return response.content
+#print(answer_with_ali("我是金牛座，我要对明天和本周的运势进行预测。")) 
