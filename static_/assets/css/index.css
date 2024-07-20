@@ -1,0 +1,270 @@
+body {
+    margin:0;
+    transition: opacity 0.5s; /* 添加过渡效果 */
+    opacity: 1;
+
+}
+
+.fade-out {
+    opacity: 0;
+}
+
+/* 添加淡入效果 */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.container {
+    height: 100vh;
+    display: flex;;
+}
+
+#background-video {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 1450px;
+    height: 775px;
+    object-fit: cover; /* Ensure the video covers the entire background */
+    z-index: -1; /* Place the video behind other content */
+}
+
+.sidebar {
+    background: rgba(0,0,0,0.5); /* 半透明的粉红色背景 */
+    border: 4px solid rgba(0,0,0, 0.5); /* 半透明边框，与背景颜色一致 */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* 添加阴影效果 */
+    width:260px;
+    height:100vh;
+    transition: width 0.2s;
+    overflow: auto;
+}
+
+.sidebar-nav {
+    padding:12px;
+    box-sizing: border-box;
+}
+
+.model-btn {
+    display: block;
+    width: 200px;
+    height: 50px;
+    padding: 10px;
+    margin: 20px auto;
+    background: rgba(106,90,205,0.5);
+    color: pink;
+    border: 2px solid #483d8b;
+    cursor: pointer;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+    border-radius:5px;
+    font-size: 22px;
+    font-weight: bold; /* 设置字体加粗 */
+    text-shadow: 10px 10px 20px rgba(255，182，193, 0.6); /* 增加阴影效果 */
+}
+
+.model-btn:hover {
+    background: rgba(156,108,185,0.8);
+    border-color: #6a5acd;
+}
+
+
+.history {
+    margin-top:60px;
+    font-size: .75rem;
+    height: calc(100vh - 150px);
+    overflow-y: auto;
+}
+
+.history .title{
+    font-weight: bold;
+}
+
+.history .msg-item{
+    white-space: nowrap;
+    font-size: 1rem;
+    margin-top: 16px;
+    overflow-x: hidden;
+}
+
+.history  .today {
+    margin-bottom: 24px;
+}
+
+.history  .yesterday {
+    margin-bottom: 24px;
+}
+
+.history  .last-7days {
+    margin-bottom: 24px;
+}
+
+.history  .last-30days {
+    margin-bottom: 24px;
+}
+
+.content {
+    flex:1;
+    padding:12px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+}
+
+.fold {
+    font-size:30px;
+    color:#d8bfd8;
+}
+
+#btn-fold-out {
+    display: none;
+}
+
+.content-log{
+    flex:1;
+}
+
+.content-nav {
+    height: 100px;
+}
+
+.content-footer {
+    height: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.input-chat-wrapper {
+    width: 650px;
+    background-color: rgb(230,230,250);
+    border-radius: 26px;
+    padding: .375rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+#input-attachment {
+    margin-left: .375rem;
+    color: #d8bfd8;
+    font-size:28px;
+}
+
+#input-chat {
+    outline: none;
+    border: none;
+    color:#d8bfd8;
+    background-color: #d8bfd8; /* 紫色背景 */;
+    width: 100%;
+    background-color: transparent;
+    font-size: 1rem;
+    line-height: 1.5rem;
+    padding: .5rem .75rem;
+}
+
+#input-send {
+    color: #d8bfd8;
+    font-size:32px;
+    margin:3px;
+}
+
+#res-log {
+    overflow-y: auto;
+    width: 650px;
+    display: flex;
+    flex-direction: column;
+    margin: 0 auto;
+    height: calc(100vh - 150px - 100px);
+}
+
+.self-msg {
+    background: rgba(230,230,250,0.8);
+    border-radius: 1.5rem;
+    padding: .625rem 1.25rem;
+    margin-bottom: 24px;
+    align-self: flex-end;
+    max-width: 75%;
+    word-wrap: break-word;
+}
+
+.llm-msg {
+    background-color: rgb(240, 240, 240); /* 改为灰色背景 */
+    border-radius: 1.5rem;
+    padding: .625rem 1.25rem;
+    margin-bottom: 24px;
+    align-self: flex-start;
+    max-width: 75%;
+    word-wrap: break-word;
+}
+
+
+.llm-msg p {
+    word-wrap: break-word;
+    width: 100%;
+    margin-bottom: 0; /* 去掉额外的间距 */
+
+}
+
+.llm-msg .tool-bar span{
+    padding:5px;
+}
+
+.llm-msg .tool-bar span:hover{
+    background-color: #f9f9f9; /* 紫色背景 */;
+}
+
+::-webkit-scrollbar {
+    display: none;
+}
+
+.chat-bubble {
+    background-color: rgb(240, 240, 240);
+    border-radius: 1.5rem;
+    padding: .625rem 1.25rem;
+    margin-bottom: 24px;
+    max-width: 75%;
+    word-wrap: break-word;
+}
+
+.res-log p span  {
+    background: #fff;
+    padding: 8px 12px;
+    border-radius: 20px;
+}
+.sty {
+    background: rgba(240,248,255,0.8);
+    padding: 12px; /* 内边距 */
+    border-radius: 20px; /* 圆角边框 */
+    margin: 10px 0; /* 上下边距，防止遮挡 */
+    color: #000; /* 文字颜色 */
+    word-wrap: break-word; /* 长词自动换行 */
+    display: inline-block;
+    max-width: 80%; /* 防止消息过宽 */
+}
+
+
+
+        .user-info {
+            position: absolute;
+            bottom: 20px;
+            left: 30px; /* 向右移动一些 */
+            display: flex;
+            align-items: center;
+            background-color: transparent; /* 设置背景为透明 */
+            padding: 10px;
+            border-radius: 8px;
+            width: 220px;
+            height: 45px;
+        }
+        .user-info img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+        .user-info span {
+            font-size: 18px; /* 设置字体大小 */
+            color: #FFBBFF; /* 设置字体颜色为白色 */
+            font-weight: bold; /* 设置字体加粗 */
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5); /* 增加阴影效果 */
+        }

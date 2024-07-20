@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>十二星座</title>
+    <link rel="stylesheet" href="./assets/font/iconfont.css">
+    <link rel="stylesheet" href="./assets/css/index.css">
+</head>
+<body>
+    <div class="container">
+        <video autoplay muted loop id="background-video">
+            <source src="./assets/css/bc3.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+        <div class="sidebar">
+            <div class="sidebar-nav">
+                <span id="btn-fold-in" class="iconfont icon-zhedie1 fold"></span>
+                <button id="btn-model1" class="model-btn">周 公 解 梦</button>
+                <button id="btn-model2" class="model-btn">塔 罗 预 测</button>
+                <button id="btn-model3" class="model-btn">十 二 星 座</button>
+                <button id="btn-model4" class="model-btn">M B T I</button>
+            </div>
+        </div>
+        <div class="content">
+            <div class="content-log">
+                <div class="content-nav">
+                    <span id="btn-fold-out" class="iconfont icon-zhedie2 fold"></span>
+                </div>
+                <div id="res-log"></div>
+            </div>
+            <div class="content-footer">
+                <div class="input-chat-wrapper">
+                    <span id="input-attachment" class="iconfont icon-fujian"></span>
+                    <input id="input-chat" placeholder="输入“运势测试”开启星座之旅吧">
+                    <span id="input-send" class="iconfont icon-shangchuan"></span>
+                </div>
+            </div>
+        </div>
+        <div class="user-info">
+            <img src="./assets/css/avatar.jpg" alt="Avatar">
+            <span id="username-display"></span>
+        </div>
+    </div>
+    <script src="./12xz.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const username = localStorage.getItem('username');
+            if (username) {
+                document.getElementById('username-display').textContent = username;
+            }
+        });
+
+        const today = document.querySelector('.today');
+        const yesterday = document.querySelector('.yesterday');
+        const last7days = document.querySelector('.last-7days');
+        const last30days = document.querySelector('.last-30days');
+
+        today.innerHTML = `
+            <div class="title">今天</div>
+            <div class="msg-item">The role of scientific data collection in regulatory processes is at stake.</div>
+            <div class="msg-item">The role of scientific .</div>
+            <div class="msg-item">The role of scientifiory processes is at stake.</div>
+        `;
+
+        yesterday.innerHTML = `
+            <div class="title">昨天</div>
+            <div class="msg-item">The role of scientific data collection in regulatory processes is at stake.</div>
+            <div class="msg-item">The role of scientific .</div>
+            <div class="msg-item">The role of scientifiory processes is at stake.</div>
+        `;
+
+        last7days.innerHTML = `
+            <div class="title">最近7天</div>
+            <div class="msg-item">The role of scientific data collection in regulatory processes is at stake.</div>
+            <div class="msg-item">The role of scientific .</div>
+            <div class="msg-item">The role of scientifiory processes is at stake.</div>
+            <div class="msg-item">The role of scientific data collection in regulatory processes is at stake.</div>
+        `;
+
+        last30days.innerHTML = `
+            <div class="title">最近30天</div>
+            <div class="msg-item">The role of scientific data collection in regulatory processes is at stake.</div>
+            <div class="msg-item">The role of scientific .</div>
+            <div class="msg-item">The role of scientifiory processes is at stake.</div>
+        `;
+    </script>
+</body>
+</html>
