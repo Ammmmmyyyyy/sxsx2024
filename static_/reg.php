@@ -12,6 +12,20 @@ try {
         $username = $_POST["username"];
         $password = $_POST["password"];
 
+        // 检查用户名是否已存在
+        $checkSql = "SELECT username FROM user WHERE username = :username";
+        $checkStmt = $pdo->prepare($checkSql);
+        $checkStmt->bindParam(':username', $username);
+        $checkStmt->execute();
+        if ($checkStmt->fetchColumn() !== false) {
+            // 用户名已存在，输出JavaScript代码
+            echo '<script>';
+            echo 'alert("用户名已存在，请尝试其他用户名！");';
+            echo 'window.location.href = "index.html";';
+            echo '</script>';
+            exit; // 防止进一步的输出
+        }
+
         // 准备SQL插入语句，使用占位符
         $sql = "INSERT INTO user (username, password) VALUES (:username, :password)";
 
