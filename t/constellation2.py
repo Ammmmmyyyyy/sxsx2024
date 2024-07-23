@@ -89,14 +89,18 @@ llm = ChatOpenAI(
     
 tagging_chain = tagging_prompt | llm
 def process_input(question):
-    if question == "开始运势测试" or question == "你好":
+    greeting_pattern = re.compile(r"^(开始|运势|测试|你好|嗨|早上好|晚上好)$")
+    horoscope_pattern = re.compile(r"(明天|本周|本月|本年)")
+    if greeting_pattern.match(question):
         return "我是一个星座运势测试助手。请告诉我你的星座以及你想分析明天、本周、本月、本年中哪些时间段的运势。"
-    else:
+    elif horoscope_pattern.search(question):
         # 构造查询字符串
         output=tagging_chain.invoke({"input": question}).dict()
         formatted_string = f"needMonth={output['needMonth']}&star={output['constellation']}&needWeek={output['needWeek']}&needTomorrow={output['needTomorrow']}&needYear={output['needYear']}"
         return get_ali_api(formatted_string)
-#print(tagging_chain.invoke({"input": "我是金牛座，我要对今年的运势进行预测。"}).dict())
+    else:
+        return question
+#print(tagging_chain.invoke({"input": "我想要知道金牛座本周和本年的运势，不要回答明天。"}).dict())
 
 llm2 = ChatOpenAI(
     base_url="http://api.baichuan-ai.com/v1",
@@ -105,18 +109,22 @@ llm2 = ChatOpenAI(
 )
 
 prompt_template = ChatPromptTemplate.from_messages(
-    [("system",'''你是一个运势测试助手,
-你的回答应该以“根据星座运势”作为开头。并且你的回答应该包含输入的所有内容。你回答的内容要尽可能的多，并且要根据预测的时间（比如明天、本周、本月、本年）分段作答。
-若你获得的输入不包含上述某一个或几个时间，则不答。
-你的回答不要包括“get_ali_api(str)”这样的文字。
+    [("system",'''你是一个运势测试助手,如果你收到的输入是关于运势的分析，你的回答要满足以下条件：
+1.你的回答应该以“根据星座运势”作为开头。并且你的回答应该包含输入的所有内容。你回答的内容要尽可能的多，并且要根据预测的时间（比如明天、本周、本月、本年）分段作答。
 答案请按
 “
 <<<明天>>>
 <<<本周>>>
 <<<本月>>>
 <<<本年>>>
-”的格式输出
-并且你的回答应该以“感谢您的查询，以上是我对您的运势分析”作为结尾。'''),
+”的格式输出。
+2.若你获得的输入不包含上述某一个或几个时间，则不答。
+3.你的回答不要包括“get_ali_api(str)”这样的文字。
+4.并且你的回答应该以“感谢您的查询，以上是我对您的运势分析”作为结尾。
+5.你的回答不要从记忆中提取，只能且必须从输入中提取。
+
+如果你收到的输入是“我是一个星座运势测试助手。请告诉我你的星座以及你想分析明天、本周、本月、本年中哪些时间段的运势。”请原封不动地输出。
+'''),
     MessagesPlaceholder(variable_name="history"),
     ("user",'''{question}''')
     ]

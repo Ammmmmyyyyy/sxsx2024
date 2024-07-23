@@ -31,56 +31,61 @@ document.querySelector("#btn-fold-out").addEventListener("click", (e) => {
 })
 
 function sendRequest() {
-            const text = document.querySelector("#input-chat").value;
-            const data = {
+    const inputChat = document.querySelector("#input-chat");
+    const text = inputChat.value;
+    const data = {
                input:text,
                 config: ""
             };
-            const resLog = document.querySelector("#res-log");
-            const selfMsg = document.createElement("div");
-            selfMsg.innerText = text;
-            selfMsg.className = "self-msg";
-            resLog.appendChild(selfMsg);
+    const resLog = document.querySelector("#res-log");
+    const selfMsg = document.createElement("div");
+    selfMsg.innerText = text;
+    selfMsg.className = "self-msg";
+    resLog.appendChild(selfMsg);
 
-            fetch("http://127.0.0.1:8080/api/tarot", {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(data),
-            }).then(response => {
-                if (response.ok) {
-                    const reader = response.body.getReader();
-                    const decoder = new TextDecoder("utf-8");
-                    const res = document.querySelector("#res-log");
-                    const chatItem = document.createElement("p");
-                    const s=document.createElement("span");
-                    s.className='sty';
-                    chatItem.appendChild(s);
-                    res.appendChild(chatItem);
+    // Clear the input box
+    inputChat.value = '';
 
-                    function read() {
-                        reader.read().then(({ done, value }) => {
-                            if (done) {
-                                console.log('Stream closed');
-                                return;
-                            }
-                            const chunk = decoder.decode(value, { stream: true });
-                            chunk.split('\r\n').forEach(eventString => {
-                                s.innerHTML += eventString;
-                            });
-                            read();
-                        }).catch(error => {
-                            console.error('Stream error', error);
-                        });
+    fetch("http://127.0.0.1:8080/api/tarot", {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+    }).then(response => {
+        if (response.ok) {
+            const reader = response.body.getReader();
+            const decoder = new TextDecoder("utf-8");
+            const res = document.querySelector("#res-log");
+            const chatItem = document.createElement("p");
+            const s = document.createElement("span");
+            s.className = 'sty';
+            chatItem.appendChild(s);
+            res.appendChild(chatItem);
+
+            function read() {
+                reader.read().then(({ done, value }) => {
+                    if (done) {
+                        console.log('Stream closed');
+                        return;
                     }
-
+                    const chunk = decoder.decode(value, { stream: true });
+                    chunk.split('\r\n').forEach(eventString => {
+                        s.innerHTML += eventString;
+                    });
                     read();
-                } else {
-                    console.error('Network response was not ok.');
-                }
-            }).catch(error => {
-                console.error('Fetch error:', error);
-            });
+                }).catch(error => {
+                    console.error('Stream error', error);
+                });
+            }
+
+            read();
+        } else {
+            console.error('Network response was not ok.');
         }
+    }).catch(error => {
+        console.error('Fetch error:', error);
+    });
+}
+
 
         document.querySelector("#btn-model1").addEventListener("click", () => {
             window.location.href = "test.html";

@@ -21,14 +21,16 @@ body {
 }
 
 #background-video {
-    position: absolute;
+    position: fixed; /* Fixed positioning ensures it stays in place during scrolling */
     top: 0;
     left: 0;
-    width: 1450px;
-    height: 775px;
+    width: 100%; /* Set the width to 100% of the viewport */
+    height: 100%; /* Set the height to 100% of the viewport */
     object-fit: cover; /* Ensure the video covers the entire background */
     z-index: -1; /* Place the video behind other content */
+    pointer-events: none; /* Allow interactions with elements on top of the video */
 }
+
 
 .sidebar {
     background: rgba(0,0,0,0.5); /* 半透明的粉红色背景 */
@@ -188,13 +190,14 @@ body {
 }
 
 .llm-msg {
-    background-color: rgb(240, 240, 240); /* 改为灰色背景 */
-    border-radius: 1.5rem;
-    padding: .625rem 1.25rem;
-    margin-bottom: 24px;
-    align-self: flex-start;
-    max-width: 75%;
-    word-wrap: break-word;
+    background: rgba(240,248,255,0.8);
+    padding: 12px; /* 内边距 */
+    border-radius: 20px; /* 圆角边框 */
+    margin: 10px 0; /* 上下边距，防止遮挡 */
+    color: #000; /* 文字颜色 */
+    word-wrap: break-word; /* 长词自动换行 */
+    display: inline-block;
+    max-width: 80%; /* 防止消息过宽 */
 }
 
 
