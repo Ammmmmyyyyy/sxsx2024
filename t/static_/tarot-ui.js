@@ -1,3 +1,10 @@
+document.addEventListener("DOMContentLoaded", () => {
+    const username = localStorage.getItem('username');
+    if (username) {
+        document.getElementById('username-display').textContent = username;
+    }
+});
+
 document.querySelector("#btn-fold-in").addEventListener("click", (e) => {
     const sidebar = document.querySelector(".sidebar");
     sidebar.style.width = 0
@@ -11,7 +18,7 @@ document.querySelector("#input-send").addEventListener("click", (e) => {
 })
 
 document.querySelector("#input-chat").addEventListener("keydown", (e) => {
-    if(e.keyCode === 13) { 
+    if(e.keyCode === 13) {
         sendRequest()
     }
 })
@@ -23,28 +30,25 @@ document.querySelector("#btn-fold-out").addEventListener("click", (e) => {
     e.target.style.display = "none"
 })
 
-function sendRequest(){
-    const text = document.querySelector("#input-chat").value
+function sendRequest() {
+    const inputChat = document.querySelector("#input-chat");
+    const text = inputChat.value;
     const data = {
-        input:text,
-        config: ""
-    }; 
-    const resLog = document.querySelector("#res-log")
+               input:text,
+                config: ""
+            };
+    const resLog = document.querySelector("#res-log");
     const selfMsg = document.createElement("div");
     selfMsg.innerText = text;
-    selfMsg.className = "self-msg"
+    selfMsg.className = "self-msg";
     resLog.appendChild(selfMsg);
 
-    const llmMsg = document.createElement("div");
-    const llmMsg_P = document.createElement("p");
-    llmMsg.className = "llm-msg"
-    llmMsg.appendChild(llmMsg_P);
-    resLog.appendChild(llmMsg);
-    fetch("http://127.0.0.1:8080/api/tarot",{
+    // Clear the input box
+    inputChat.value = '';
+
+    fetch("http://127.0.0.1:8080/api/tarot", {
         method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data),
     }).then(response => {
         if (response.ok) {
@@ -52,7 +56,10 @@ function sendRequest(){
             const decoder = new TextDecoder("utf-8");
             const res = document.querySelector("#res-log");
             const chatItem = document.createElement("p");
-            res.appendChild(chatItem)
+            const s = document.createElement("span");
+            s.className = 'sty';
+            chatItem.appendChild(s);
+            res.appendChild(chatItem);
 
             function read() {
                 reader.read().then(({ done, value }) => {
@@ -60,15 +67,10 @@ function sendRequest(){
                         console.log('Stream closed');
                         return;
                     }
-    
                     const chunk = decoder.decode(value, { stream: true });
-                    console.log(1000,chunk.split('\r\n'))
                     chunk.split('\r\n').forEach(eventString => {
-                        console.log(1000,eventString);
-                        chatItem.innerHTML += eventString;  
+                        s.innerHTML += eventString;
                     });
-                    
-
                     read();
                 }).catch(error => {
                     console.error('Stream error', error);
@@ -81,5 +83,22 @@ function sendRequest(){
         }
     }).catch(error => {
         console.error('Fetch error:', error);
-    });    
+    });
 }
+
+
+        document.querySelector("#btn-model1").addEventListener("click", () => {
+            window.location.href = "test.html";
+        });
+
+        document.querySelector("#btn-model2").addEventListener("click", () => {
+            window.location.href = "tarot.html";
+        });
+
+        document.querySelector("#btn-model3").addEventListener("click", () => {
+            window.location.href = "constellation2.html";
+        });
+
+        document.querySelector("#btn-model4").addEventListener("click", () => {
+            window.location.href = "constellation.html";
+        });

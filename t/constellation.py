@@ -24,7 +24,9 @@ llm = ChatOpenAI(
 
 prompt_template = ChatPromptTemplate.from_messages(
     [
-        ("system",'''你应该根据询问的星座给出一个简单的介绍。'''),
+        ("system",'''你是一个有关于mbti的大模型。
+                    如果我想测试mbti，实际上你不需要给我一个简化的过程帮助我自我评估，你只需要简单介绍一下mbti，并引导我去官方网站检测。
+                    你的回答不要使用markdown格式。'''),
         MessagesPlaceholder(variable_name="history"),
         ("user", '''{question}''')
     ]
@@ -45,25 +47,7 @@ config = {
     }
 }
 
-""" def extract_constellation(question):
-    # 简单的字符串匹配方法来识别星座名
-    for constellation in constellation_links.keys():
-        if constellation in question:
-            return constellation
-    return None
-
-def get_constellation_info(question):
-    constellation_name = extract_constellation(question)
-    if not constellation_name:
-        return "无法识别问题中的星座名。"
-    
-    link = constellation_links.get(constellation_name, "https://example.com/default")
-    # 将星座名和链接插入到问题中
-    question_with_link = question.replace(constellation_name, f"{constellation_name} [这里]({link})")
-    response = chain.invoke({"question": question_with_link})
-    return response """
-
 # 示例使用
-""" question = "巨蟹座是什么意思？"  # 可以根据需要替换
-response = get_constellation_info(question)
+""" question = "你能给我解释一下mbti吗？"  
+response = chain.invoke({"question":question},config=config)
 print(response) """

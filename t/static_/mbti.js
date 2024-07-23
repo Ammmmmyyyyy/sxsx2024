@@ -1,3 +1,10 @@
+document.addEventListener("DOMContentLoaded", () => {
+    const username = localStorage.getItem('username');
+    if (username) {
+        document.getElementById('username-display').textContent = username;
+    }
+});
+
 document.querySelector("#btn-fold-in").addEventListener("click", (e) => {
     const sidebar = document.querySelector(".sidebar");
     sidebar.style.width = 0
@@ -11,7 +18,7 @@ document.querySelector("#input-send").addEventListener("click", (e) => {
 })
 
 document.querySelector("#input-chat").addEventListener("keydown", (e) => {
-    if(e.keyCode === 13) { 
+    if(e.keyCode === 13) {
         sendRequest()
     }
 })
@@ -22,13 +29,6 @@ document.querySelector("#btn-fold-out").addEventListener("click", (e) => {
 
     e.target.style.display = "none"
 })
-
-function sendRequest(){
-    const inputChat = document.querySelector("#input-chat");
-    const text = inputChat.value;
-    processInput(text);
-    inputChat.value = '';
-}
 
 const mbtiTypes = {
     "INTJ": "INTJ是具有策略性和计划性的“建筑师”，他们善于制定长远计划并致力于实现目标。他们通常是创新者，擅长逻辑分析和解决复杂问题。INTJ在工作中通常表现出色，尤其是在需要独立思考和长期战略的领域。",
@@ -49,51 +49,98 @@ const mbtiTypes = {
     "ESFP": "ESFP是充满活力和热情的“表演者”，他们喜欢享受生活并与他人分享快乐。ESFP通常是社交能手和娱乐专家，擅长通过互动带来欢乐。"
 };
 
-function processInput(text) {
-    const userInput = text.toUpperCase();
+function sendRequest() {
+    const inputChat = document.querySelector("#input-chat");
+    const text = inputChat.value;
+    const data = { question: text, config: "" };
     const resLog = document.querySelector("#res-log");
-
-    // 显示用户输入的内容
     const selfMsg = document.createElement("div");
     selfMsg.innerText = text;
     selfMsg.className = "self-msg";
     resLog.appendChild(selfMsg);
 
+    // Clear the input box
+    inputChat.value = '';
+
+    fetch("http://127.0.0.1:8080/api/constellation", {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+    }).then(response => {
+        if (response.ok) {
+            const reader = response.body.getReader();
+            const decoder = new TextDecoder("utf-8");
+            const res = document.querySelector("#res-log");
+            const chatItem = document.createElement("p");
+            const s = document.createElement("span");
+            s.className = 'sty';
+            chatItem.appendChild(s);
+            res.appendChild(chatItem);
+            
+
+            let responseText = '';
+
+
+            function read() {
+                reader.read().then(({ done, value }) => {
+                    if (done) {
+                        console.log('Stream closed');
+                        handleMbtiLink(s, responseText);
+                        return;
+                    }
+                    const chunk = decoder.decode(value, { stream: true });
+                    chunk.split('\r\n').forEach(eventString => {
+                        responseText += eventString;
+                        s.innerHTML += eventString;
+                    });
+                    read();
+                }).catch(error => {
+                    console.error('Stream error', error);
+                });
+            }
+
+            read();
+        } else {
+            console.error('Network response was not ok.');
+        }
+    }).catch(error => {
+        console.error('Fetch error:', error);
+    });
+}
+
+document.querySelector("#btn-model1").addEventListener("click", () => {
+    window.location.href = "test.html";
+});
+
+document.querySelector("#btn-model2").addEventListener("click", () => {
+    window.location.href = "tarot.html";
+});
+
+document.querySelector("#btn-model3").addEventListener("click", () => {
+    window.location.href = "constellation2.html";
+});
+
+document.querySelector("#btn-model4").addEventListener("click", () => {
+    window.location.href = "constellation.html";
+});
+
+function handleMbtiLink(spanElement, responseText) {
+    const userInput = responseText.toUpperCase();
+    const resLog = document.querySelector("#res-log");
+
     const matchedType = Object.keys(mbtiTypes).find(type => userInput.includes(type));
-    const resultDiv = document.createElement('div');
-    resultDiv.className = "result";
+    let resultDiv = '';
 
     if (userInput.includes("测试")) {
-        resultDiv.innerHTML = `请点击如下链接测试你的人格：<a href="https://www.16personalities.com/" target="_blank">https://www.16personalities.com/</a>`;
+        resultDiv = `请点击如下链接测试你的人格：<a href="https://www.16personalities.com/" target="_blank">https://www.16personalities.com/</a>`;
     } else if (matchedType) {
-        resultDiv.innerHTML = 
-            `<div class="text">
-                ${mbtiTypes[matchedType]} 想了解更多请点击下面网页：
-                <a href="${matchedType.toLowerCase()}/${matchedType.toLowerCase()}.html" target="_blank">Go to ${matchedType} page</a>
-            </div>`;
-    } else {
-        resultDiv.textContent = 'No MBTI type found in the input';
+        resultDiv = 
+            `想了解更多请点击下面网页：<a href="${matchedType.toLowerCase()}/${matchedType.toLowerCase()}.html" target="_blank">Go to ${matchedType} page</a>`;
     }
 
-    // 显示生成的链接或提示信息
-    const llmMsg = document.createElement("div");
-    llmMsg.className = "llm-msg";
-    llmMsg.appendChild(resultDiv);
-    resLog.appendChild(llmMsg);
+    if (resultDiv !== '') {
+        // 将链接信息添加到大模型的回答末尾
+        spanElement.innerHTML += `<br>${resultDiv}`;
+    }
 }
-document.querySelector("#btn-model1").addEventListener("click", () => {
-            window.location.href = "test.html";
-        });
-
-        document.querySelector("#btn-model2").addEventListener("click", () => {
-            window.location.href = "tarot.html";
-        });
-
-        document.querySelector("#btn-model3").addEventListener("click", () => {
-            window.location.href = "constellation2.html";
-        });
-
-        document.querySelector("#btn-model4").addEventListener("click", () => {
-            window.location.href = "constellation.html";
-        });
 

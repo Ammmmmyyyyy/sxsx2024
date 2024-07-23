@@ -1,5 +1,18 @@
 body {
     margin:0;
+    transition: opacity 0.5s; /* 添加过渡效果 */
+    opacity: 1;
+
+}
+
+.fade-out {
+    opacity: 0;
+}
+
+/* 添加淡入效果 */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
 }
 
 .container {
@@ -7,8 +20,22 @@ body {
     display: flex;;
 }
 
+#background-video {
+    position: fixed; /* Fixed positioning ensures it stays in place during scrolling */
+    top: 0;
+    left: 0;
+    width: 100%; /* Set the width to 100% of the viewport */
+    height: 100%; /* Set the height to 100% of the viewport */
+    object-fit: cover; /* Ensure the video covers the entire background */
+    z-index: -1; /* Place the video behind other content */
+    pointer-events: none; /* Allow interactions with elements on top of the video */
+}
+
+
 .sidebar {
-    background: #f9f9f9;
+    background: rgba(0,0,0,0.5); /* 半透明的粉红色背景 */
+    border: 4px solid rgba(0,0,0, 0.5); /* 半透明边框，与背景颜色一致 */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* 添加阴影效果 */
     width:260px;
     height:100vh;
     transition: width 0.2s;
@@ -19,6 +46,29 @@ body {
     padding:12px;
     box-sizing: border-box;
 }
+
+.model-btn {
+    display: block;
+    width: 200px;
+    height: 50px;
+    padding: 10px;
+    margin: 20px auto;
+    background: rgba(106,90,205,0.5);
+    color: pink;
+    border: 2px solid #483d8b;
+    cursor: pointer;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+    border-radius:5px;
+    font-size: 22px;
+    font-weight: bold; /* 设置字体加粗 */
+    text-shadow: 10px 10px 20px rgba(255，182，193, 0.6); /* 增加阴影效果 */
+}
+
+.model-btn:hover {
+    background: rgba(156,108,185,0.8);
+    border-color: #6a5acd;
+}
+
 
 .history {
     margin-top:60px;
@@ -64,7 +114,7 @@ body {
 
 .fold {
     font-size:30px;
-    color:#7d7d7d;
+    color:#d8bfd8;
 }
 
 #btn-fold-out {
@@ -88,7 +138,7 @@ body {
 
 .input-chat-wrapper {
     width: 650px;
-    background-color: rgb(244, 244, 244);
+    background-color: rgb(230,230,250);
     border-radius: 26px;
     padding: .375rem;
     display: flex;
@@ -98,14 +148,15 @@ body {
 
 #input-attachment {
     margin-left: .375rem;
-    color: #0d0d0d;
+    color: #d8bfd8;
     font-size:28px;
 }
 
 #input-chat {
     outline: none;
     border: none;
-    color:#0d0d0d;
+    color:#d8bfd8;
+    background-color: #d8bfd8; /* 紫色背景 */;
     width: 100%;
     background-color: transparent;
     font-size: 1rem;
@@ -114,7 +165,7 @@ body {
 }
 
 #input-send {
-    color: #d1d1d1;
+    color: #d8bfd8;
     font-size:32px;
     margin:3px;
 }
@@ -129,27 +180,32 @@ body {
 }
 
 .self-msg {
-    padding-bottom: .625rem;
-    padding-top: .625rem;
-    padding-left: 1.25rem;
-    padding-right: 1.25rem;
-    background-color: rgb(244, 244, 244);
+    background: rgba(230,230,250,0.8);
     border-radius: 1.5rem;
+    padding: .625rem 1.25rem;
+    margin-bottom: 24px;
     align-self: flex-end;
-    margin-bottom:24px;
+    max-width: 75%;
+    word-wrap: break-word;
 }
 
 .llm-msg {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
+    background: rgba(240,248,255,0.8);
+    padding: 12px; /* 内边距 */
+    border-radius: 20px; /* 圆角边框 */
+    margin: 10px 0; /* 上下边距，防止遮挡 */
+    color: #000; /* 文字颜色 */
+    word-wrap: break-word; /* 长词自动换行 */
+    display: inline-block;
+    max-width: 80%; /* 防止消息过宽 */
 }
+
 
 .llm-msg p {
     word-wrap: break-word;
     width: 100%;
-    align-self: flex-start;
-    margin-bottom:24px;
+    margin-bottom: 0; /* 去掉额外的间距 */
+
 }
 
 .llm-msg .tool-bar span{
@@ -157,9 +213,61 @@ body {
 }
 
 .llm-msg .tool-bar span:hover{
-    background-color: #f9f9f9;;
+    background-color: #f9f9f9; /* 紫色背景 */;
 }
 
 ::-webkit-scrollbar {
     display: none;
 }
+
+.chat-bubble {
+    background-color: rgb(240, 240, 240);
+    border-radius: 1.5rem;
+    padding: .625rem 1.25rem;
+    margin-bottom: 24px;
+    max-width: 75%;
+    word-wrap: break-word;
+}
+
+.res-log p span  {
+    background: #fff;
+    padding: 8px 12px;
+    border-radius: 20px;
+}
+.sty {
+    background: rgba(240,248,255,0.8);
+    padding: 12px; /* 内边距 */
+    border-radius: 20px; /* 圆角边框 */
+    margin: 10px 0; /* 上下边距，防止遮挡 */
+    color: #000; /* 文字颜色 */
+    word-wrap: break-word; /* 长词自动换行 */
+    display: inline-block;
+    max-width: 80%; /* 防止消息过宽 */
+}
+
+
+
+        .user-info {
+            position: absolute;
+            bottom: 20px;
+            left: 30px; /* 向右移动一些 */
+            display: flex;
+            align-items: center;
+            background-color: transparent; /* 设置背景为透明 */
+            padding: 10px;
+            border-radius: 8px;
+            width: 220px;
+            height: 45px;
+        }
+        .user-info img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+        .user-info span {
+            font-size: 18px; /* 设置字体大小 */
+            color: #FFBBFF; /* 设置字体颜色为白色 */
+            font-weight: bold; /* 设置字体加粗 */
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5); /* 增加阴影效果 */
+        }
