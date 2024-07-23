@@ -1,6 +1,6 @@
 1、PHP配置  
   参考博文（http://t.csdnimg.cn/3InVu）  比较多，但没改php.ini设置默认时区和设置ssl，然后debug调试部分的内容也没管。  
-  版本：php-8.3.9-Win32-vs16-x64（https://windows.php.net/download#php-8.2）  
+  版本：php-8.3.9-Win32-vs16-x64，注意是thread safe版本的而不是non thread safe版本的（https://windows.php.net/download#php-8.2）  
   下载解压后在文件夹中将php.ini-development文件复制一份并改名为为php.ini  
   这里使用的是SQLite数据库，使用PDO库连接，因此我对php.ini的修改为去掉下面这些行的分号：  
   extension=mysqli （这行其实可以不改，但是finish login and register对应版本使用的是mysqli库连接mysql数据库所以有修改）  
