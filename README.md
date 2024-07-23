@@ -7,6 +7,6 @@
   extension=sqlite3  
   （配置的时候参考了 https://blog.csdn.net/qq_37215621/article/details/126861680?spm=1001.2014.3001.5506 ，但是没查到对应的几行，所以是查询pdo、mysqli、sqlite然后自己改的）  
   使用的编辑器是vscode，搭配php server和php debug插件，需要将php server的PHP path设置为php.exe文件的绝对路径  
-  此外，还需要将php解压后的文件夹的绝对路径和php.exe文件的绝对路径添加到环境变量中  
+  此外，还需要将php解压后的文件夹的绝对路径和解压后的文件夹里面的ext文件夹（msqli和pdo等库）的绝对路径添加到环境变量中  
 2、项目从static_\index.html页面进入  
 3、ai_login.db数据库通过运行static_\init_ai_login.php创建，其包含的元组可通过运行static_\testdb_record.php查看。  
