@@ -14,7 +14,7 @@ import re
 def get_ali_api(str):
     host = 'https://ali-star-lucky.showapi.com'
     path = '/star'
-    appcode = '6685c9f6da73471dba8f2e0e6dc0f27c'
+    appcode = 'eb8e72f59c414bc49dfc40e6a8a0a8e7'
     
     # 动态构建查询字符串
     querys = str
